@@ -44,6 +44,15 @@ app.post("/item", async (req, res) => {
     }
 })
 
+app.get("/items", async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM items')
+        res.json({"items": result.rows})
+    } catch {
+        res.status(200).json(`err : ${err}`)
+    }
+})
+
 // app.post("/")
 
 app.listen(port, () => {
