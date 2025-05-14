@@ -1,6 +1,5 @@
 // DOC : https://github.com/postgres-pool/postgres-pool
-const { v4: uuidv4 } = require("uuid");
-const uuid = uuidv4();
+const { v4: uuid } = require("uuid");
 const {Pool} = require('pg')
 const express = require('express')
 const app = express()
@@ -18,7 +17,7 @@ const pool = new Pool({
     port: 5500
 })
 
-
+app.use(express.json())
 app.post("/", async (req, res) => {
     try{
         const result = await pool.query('CREATE TABLE IF NOT EXISTS items (id UUID PRIMARY KEY, name VARCHAR(255))')
@@ -32,6 +31,7 @@ app.post("/", async (req, res) => {
 app.post("/item", async (req, res) => {
     try {
         const {name} = req.body
+        console.log(name)
         const id = uuid()
         const result = await pool.query('INSERT INTO items (id, name) VALUES ($1, $2) RETURNING *', [
             id,
